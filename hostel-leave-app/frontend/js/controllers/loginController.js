@@ -62,35 +62,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const password = pwInput.value;
 
     try {
-      // Check localStorage for the registered user first (Mock backend)
-      const storedUser = localStorage.getItem('demo_user_' + username);
-      if (storedUser) {
-        const parsedUser = JSON.parse(storedUser);
-        if (parsedUser.password === password) {
-          // Simulate successful login
-          ApiClient.setSession('demo-token-12345', { id: 999, username: username, role: 'student' });
-          window.location.href = 'dashboard.html';
-          return;
-        } else {
-          errorBox.textContent = 'Invalid credentials. Please try again.';
-          errorBox.style.display = 'block';
-          return;
-        }
+      if (!window.firebaseAPI) {
+        throw new Error("Firebase SDK is not loaded yet. Please try again in a moment.");
       }
 
-      // If not in localStorage, try the real backend
-      const result = await AuthService.login(username, password);
+      // We need to find the user's email since Firebase Auth uses email
+      const usersRef = window.firebaseAPI.collection(window.firebaseDb, "users");
+      const q = window.firebaseAPI.query(usersRef, window.firebaseAPI.where("username", "==", username));
+      const querySnapshot = await window.firebaseAPI.getDocs(q);
 
-      if (!result.success) {
-        errorBox.textContent = result.message || 'Login failed.';
+      if (querySnapshot.empty) {
+        errorBox.textContent = 'Invalid credentials. User not found.';
         errorBox.style.display = 'block';
         return;
       }
 
-      ApiClient.setSession(result.token, result.user);
+      // Get the email from the matched user document
+      let emailToLogin = '';
+      querySnapshot.forEach((doc) => {
+        emailToLogin = doc.data().email;
+      });
+
+      // Now authenticate with Firebase using the retrieved email
+      const userCredential = await window.firebaseAPI.signInWithEmailAndPassword(
+        window.firebaseAuth, 
+        emailToLogin, 
+        password
+      );
+
+      // Simulate the session setup that the app expects
+      ApiClient.setSession(userCredential.user.accessToken, { id: userCredential.user.uid, username: username, role: 'student' });
       window.location.href = 'dashboard.html';
+
     } catch (err) {
-      errorBox.textContent = 'Could not reach the server. Please try again.';
+      console.error(err);
+      errorBox.textContent = err.message || 'Login failed. Please check your credentials.';
       errorBox.style.display = 'block';
     }
   });
@@ -105,15 +111,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const password = regPwInput.value;
 
     try {
-      // In a real app, you would call AuthService.register(email, username, password)
-      // Since it's a demo without a real backend for register yet, we'll simulate success
-      
-      // Store the user locally to allow them to log in immediately
-      localStorage.setItem('demo_user_' + username, JSON.stringify({
+      if (!window.firebaseAPI) {
+        throw new Error("Firebase SDK is not loaded yet. Please try again in a moment.");
+      }
+
+      // Check if username already exists
+      const usersRef = window.firebaseAPI.collection(window.firebaseDb, "users");
+      const q = window.firebaseAPI.query(usersRef, window.firebaseAPI.where("username", "==", username));
+      const querySnapshot = await window.firebaseAPI.getDocs(q);
+      if (!querySnapshot.empty) {
+        throw new Error("Username already taken. Please choose another.");
+      }
+
+      // 1. Create the user in Firebase Auth
+      const userCredential = await window.firebaseAPI.createUserWithEmailAndPassword(
+        window.firebaseAuth, 
+        email, 
+        password
+      );
+      const user = userCredential.user;
+
+      // 2. Save the username in Firestore database
+      await window.firebaseAPI.setDoc(window.firebaseAPI.doc(window.firebaseDb, "users", user.uid), {
         email: email,
         username: username,
-        password: password
-      }));
+        createdAt: new Date().toISOString()
+      });
 
       successBox.textContent = 'Registration successful! Please login.';
       successBox.style.display = 'block';
@@ -129,7 +152,8 @@ document.addEventListener('DOMContentLoaded', () => {
         tabLogin.click();
       }, 1500);
     } catch (err) {
-      errorBox.textContent = 'Could not reach the server. Please try again.';
+      console.error(err);
+      errorBox.textContent = err.message || 'Registration failed. Please try again.';
       errorBox.style.display = 'block';
     }
   });

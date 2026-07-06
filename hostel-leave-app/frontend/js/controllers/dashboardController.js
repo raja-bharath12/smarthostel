@@ -85,11 +85,17 @@ document.addEventListener('DOMContentLoaded', () => {
       Toast.show('Please fill all required fields.', true);
       return;
     }
-    if (new Date(from_date) < new Date()) {
+    
+    // We parse the dates explicitly to avoid browser inconsistencies
+    const fromTime = new Date(from_date).getTime();
+    const toTime = new Date(to_date).getTime();
+    const serverTime = new Date().getTime() - 60000; // allow 1 minute buffer
+
+    if (fromTime < serverTime) {
       Toast.show('From Date Time must be greater than server time.', true);
       return;
     }
-    if (new Date(to_date) <= new Date(from_date)) {
+    if (toTime <= fromTime) {
       Toast.show('To Date must be after From Date.', true);
       return;
     }
