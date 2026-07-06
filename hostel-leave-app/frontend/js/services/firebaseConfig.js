@@ -3,13 +3,13 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } f
 import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCWzXtvhC_IxgNvY5-C_xaZankyJP9zQsw",
-  authDomain: "smarthostel-815f1.firebaseapp.com",
-  projectId: "smarthostel-815f1",
-  storageBucket: "smarthostel-815f1.firebasestorage.app",
-  messagingSenderId: "965348831983",
-  appId: "1:965348831983:web:ce66aac514918b7b28a11a",
-  measurementId: "G-VRD1FZJQZC"
+  apiKey: "AIzaSyCjPvBT3v0ZIedvknnRzzknUriD776jyXQ",
+  authDomain: "smarthostel-cc625.firebaseapp.com",
+  projectId: "smarthostel-cc625",
+  storageBucket: "smarthostel-cc625.firebasestorage.app",
+  messagingSenderId: "473787641631",
+  appId: "1:473787641631:web:e0600b939da296cf020a2a",
+  measurementId: "G-85VXK5W6F3"
 };
 
 // Initialize Firebase
