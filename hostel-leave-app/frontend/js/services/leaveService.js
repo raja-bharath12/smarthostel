@@ -16,7 +16,7 @@ const LeaveService = {
         return {
           success: true,
           data: data,
-          pagination: { currentPage: 1, pageSize: pageSize, totalRecords: data.length, totalPages: 1 }
+          pagination: { page: 1, totalPages: 1, total: data.length }
         };
       } catch (err) {
         console.error(err);
@@ -32,8 +32,10 @@ const LeaveService = {
         const user = ApiClient.getUser();
         const leaveId = "leave_" + Date.now();
         payload.userId = user.username || user.id;
-        payload.status = 'Pending';
+        payload.status = 'Submitted';
         payload.appliedAt = new Date().toISOString();
+        payload.call_count = 0;
+        payload.application_no = "APP-" + Date.now().toString().slice(-6);
         
         await window.firebaseAPI.setDoc(window.firebaseAPI.doc(window.firebaseDb, "leaves", leaveId), payload);
         return { success: true };
@@ -48,7 +50,6 @@ const LeaveService = {
   async cancel(leaveId) {
     if (window.firebaseAPI && window.firebaseDb) {
       try {
-        // Just mock success for cancel, or we can update the doc to Cancelled
         await window.firebaseAPI.setDoc(window.firebaseAPI.doc(window.firebaseDb, "leaves", leaveId), { status: 'Cancelled' }, { merge: true });
         return { success: true };
       } catch (err) {
@@ -60,7 +61,7 @@ const LeaveService = {
 
   async getApprovalDetails(leaveId) {
     if (window.firebaseAPI && window.firebaseDb) {
-      return { success: true, approvals: [] }; // mock approval details
+      return { success: true, faculty: [], parent: [], parentStatus: 'Pending' }; 
     }
     return ApiClient.get(`/leaves/${leaveId}/approvals`);
   },
