@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Smart Hostel - Login</title>
+<link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <div class="login-wrapper">
+    <div class="login-logo">
+      <img src="../assets/img/logo.svg" alt="logo" />
+      <div class="title">CAMPUS INSTITUTIONS<br />DEMO CITY</div>
+    </div>
+
+    <div class="login-card">
+      <h2>Sign in to your account</h2>
+      <p class="subtitle">Please enter your name and password to log in.</p>
+
+      <div class="auth-tabs" style="display: flex; margin-bottom: 20px; gap: 10px;">
+        <button id="tabLogin" type="button" class="btn-primary" style="flex:1;">Login</button>
+        <button id="tabRegister" type="button" class="btn-primary" style="flex:1; opacity: 0.7;">Register</button>
+      </div>
+
+      <div id="errorBox" class="error-msg"></div>
+      <div id="successBox" class="success-msg" style="display: none; padding: 10px; margin-bottom: 15px; border-radius: 4px; background: rgba(0, 255, 0, 0.1); color: #00ff00; border: 1px solid rgba(0, 255, 0, 0.3);"></div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">User Name :</label>
+          <input type="text" id="username" placeholder="Username" autocomplete="username" required />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password :</label>
+          <div class="password-wrap">
+            <input type="password" id="password" placeholder="Password" autocomplete="current-password" required />
+            <button type="button" id="togglePw">👁</button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">Login →</button>
+      </form>
+
+      <form id="registerForm" style="display: none;">
+        <div class="form-group">
+          <label for="regEmail">Email :</label>
+          <input type="email" id="regEmail" placeholder="Email Address" required />
+        </div>
+
+        <div class="form-group">
+          <label for="regUsername">User Name :</label>
+          <input type="text" id="regUsername" placeholder="Uppercase & Number" required pattern="^(?=.*\d)[A-Z\d]+$" title="Username must contain only uppercase letters and at least one number." oninput="this.value = this.value.toUpperCase()" autocomplete="username" />
+        </div>
+
+        <div class="form-group">
+          <label for="regPassword">Password :</label>
+          <div class="password-wrap">
+            <input type="password" id="regPassword" placeholder="Password" required autocomplete="new-password" />
+            <button type="button" id="toggleRegPw">👁</button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">Register →</button>
+      </form>
+    </div>
+
+    <div class="login-footer">
+      2026 © Smart Hostel Demo Project<br />
+      Version 0.2.9
+    </div>
+  </div>
+
+  <!-- Layered JS: utils -> services -> controllers -->
+  <script src="../js/utils/helpers.js"></script>
+  <script src="../js/services/apiClient.js"></script>
+  <script src="../js/services/authService.js"></script>
+  <script src="../js/controllers/loginController.js"></script>
+</body>
+</html>
