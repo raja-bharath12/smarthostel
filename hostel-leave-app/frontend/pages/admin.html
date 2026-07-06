@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Smart Hostel - Admin Dashboard</title>
+<link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+  <div class="topbar">
+    <button class="hamburger" id="hamburgerBtn">☰</button>
+    <div class="brand">
+      <img src="../assets/img/logo.svg" alt="logo" />
+      <span>CAMPUS INSTITUTIONS<br />DEMO CITY (ADMIN)</span>
+    </div>
+    <div class="user-id" id="userIdLabel">Admin</div>
+  </div>
+
+  <div class="app-layout">
+    <div class="sidebar" id="sidebar">
+      <div class="nav-item active" data-nav="users">👥 Registered Users</div>
+      <div class="nav-item" id="logoutBtn" style="margin-top:20px; color:#e03131;">⏻ Logout</div>
+    </div>
+
+    <div class="main-content">
+      <h1>Registered Users</h1>
+      <p class="subtitle">List of all users registered in the Firebase Database.</p>
+
+      <div class="card">
+        <div class="table-scroll">
+          <table class="leave-table">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>Username</th>
+                <th>Email Address</th>
+                <th>Joined Date</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody">
+              <tr><td colspan="4">Loading users from Firebase...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    2026 © Smart Hostel Demo Project · Admin Panel
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Layered JS -->
+  <script defer src="../js/utils/helpers.js"></script>
+  <script defer src="../js/services/apiClient.js"></script>
+  <script defer src="../js/services/authService.js"></script>
+  <script type="module" src="../js/services/firebaseConfig.js"></script>
+  <script defer src="../js/components/toast.js"></script>
+  <script defer src="../js/controllers/adminController.js"></script>
+</body>
+</html>
